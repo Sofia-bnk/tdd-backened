@@ -1,6 +1,11 @@
 const app = require("../app");
 const supertest = require("supertest");
 const request = supertest(app);
+const db = require("../database");
+
+afterEach(async function () {
+  await db.cleanUp();
+});
 
 it("get users", async () => {
   const response = await request.get("/api/users");
@@ -39,5 +44,10 @@ it("delete one user", async () => {
   expect(res.status).toBe(200);
   const response = await request.delete("/api/users/" + user.login);
   expect(response.status).toBe(200);
-  expect([]);
+
+  let resGet = await request.get("/api/users");
+  expect(resGet.body).toStrictEqual([]);
+
+  responseGet = await request.get("/api/users/" + user.id);
+  expect(responseGet.status).toBe(404);
 });

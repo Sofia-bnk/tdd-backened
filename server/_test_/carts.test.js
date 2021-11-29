@@ -1,9 +1,13 @@
 const app = require("../app");
 const supertest = require("supertest");
 const request = supertest(app);
+const db = require("../database");
+
+afterEach(async function () {
+  await db.cleanUp();
+});
 
 it("get cart", async () => {
-  // const userLogin = "123";
   const res = await request.get("/api/carts/:userLogin");
   expect(res.status).toBe(200);
   expect(res.body).toStrictEqual([]);
@@ -26,8 +30,8 @@ it("uppdate product in the cart", async () => {
     productId: "123",
     amount: 49,
   };
-  const res = await request.post("/api/carts/:userLogin/").send(cartItem);
-  expect(res.status).toBe(200);
+
+  await request.post("/api/carts/:userLogin/").send(cartItem);
   const editedCartItem = {
     productId: "123",
     amount: 50,
@@ -41,14 +45,16 @@ it("uppdate product in the cart", async () => {
 
 it("delete item", async () => {
   const cartItem = {
-    productId: "123",
+    productId: "100",
     amount: 49,
   };
-  const res = await request.post("/api/carts/:userLogin/").send(cartItem);
-  expect(res.status).toBe(200);
+  await request.post("/api/carts/:userLogin/").send(cartItem);
+
   const response = await request.delete(
     "/api/carts/:userLogin/" + cartItem.productId
   );
   expect(response.status).toBe(200);
-  expect([]);
+
+  let resDel = await request.get("/api/carts/:userLogin/");
+  expect(resDel.body).toStrictEqual([]);
 });

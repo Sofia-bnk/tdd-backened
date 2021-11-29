@@ -1,6 +1,11 @@
 const app = require("../app");
 const supertest = require("supertest");
 const request = supertest(app);
+const db = require("../database");
+
+afterEach(async function () {
+  await db.cleanUp();
+});
 
 it("get products", async () => {
   const res = await request.get("/api/products");
@@ -36,10 +41,14 @@ it("uppdate product", async () => {
 });
 
 it("delete product", async () => {
-  const product = { id: "123", name: "Tshirt", price: 1000 };
+  const product = { id: "000", name: "Tshirt", price: 1000 };
   await request.post("/api/products").send(product);
   const response = await request.delete("/api/products/" + product.id);
   expect(response.status).toBe(200);
-  const getRes = await request.get("/api/products/" + product.id);
-  expect(getRes.status).toBe(404);
+
+  let res = await request.get("/api/products");
+  expect(res.body).toStrictEqual([]);
+
+  res = await request.get("/api/products/" + product.id);
+  expect(res.status).toBe(404);
 });

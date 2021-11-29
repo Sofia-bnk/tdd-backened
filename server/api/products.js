@@ -18,7 +18,10 @@ module.exports = function (app) {
 
   app.get("/api/products/:id", function (req, res) {
     const product = database.getProduct(req.params.id);
-    res.json(product);
+    if (product) {
+      return res.json(product);
+    }
+    return res.status(404).json();
   });
 
   app.put("/api/products/:id", function (req, res) {

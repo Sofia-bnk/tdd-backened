@@ -12,7 +12,7 @@ module.exports = function (app) {
       amount: req.body.amount,
     };
     database.addCartItem(cartItem);
-    res.json();
+    res.status(201).json();
   });
 
   app.put("/api/carts/:userLogin/:productId", function (req, res) {

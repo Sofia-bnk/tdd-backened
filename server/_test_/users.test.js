@@ -17,10 +17,9 @@ it("add one user", async () => {
     login: "123",
     name: "eli",
   };
-  const res = await request.post("/api/users").send(user);
-  expect(res.status).toBe(200);
-  const response = await request.get("/api/users");
-  expect(response.status).toBe(200);
+  let response = await request.post("/api/users").send(user);
+  expect(response.status).toBe(201);
+  response = await request.get("/api/users");
   expect(response.body).toStrictEqual([user]);
 });
 it("get one user", async () => {
@@ -28,8 +27,7 @@ it("get one user", async () => {
     login: "123",
     name: "eli",
   };
-  const response = await request.post("/api/users").send(user);
-  expect(response.status).toBe(200);
+  await request.post("/api/users").send(user);
   const res = await request.get("/api/users/" + user.login);
   expect(res.status).toBe(200);
   expect(res.body).toStrictEqual(user);
@@ -40,8 +38,7 @@ it("delete one user", async () => {
     login: "123",
     name: "eli",
   };
-  const res = await request.post("/api/users").send(user);
-  expect(res.status).toBe(200);
+  await request.post("/api/users").send(user);
   const response = await request.delete("/api/users/" + user.login);
   expect(response.status).toBe(200);
 

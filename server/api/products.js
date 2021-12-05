@@ -13,7 +13,7 @@ module.exports = function (app) {
       price: req.body.price,
     };
     database.addProduct(product);
-    res.status(200).json();
+    res.status(201).json();
   });
 
   app.get("/api/products/:id", function (req, res) {

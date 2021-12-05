@@ -19,9 +19,8 @@ it("add item to cart", async () => {
     amount: 49,
   };
   const res = await request.post("/api/carts/:userLogin/").send(cartItem);
-  expect(res.status).toBe(200);
+  expect(res.status).toBe(201);
   const response = await request.get("/api/carts/:userLogin/");
-  expect(response.status).toBe(200);
   expect(response.body).toStrictEqual([cartItem]);
 });
 

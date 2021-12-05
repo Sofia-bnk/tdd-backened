@@ -15,9 +15,10 @@ it("get products", async () => {
 
 it("post products", async () => {
   const product = { id: "123", name: "Tshirt", price: 1000 };
-  await request.post("/api/products").send(product);
-  const response = await request.get("/api/products");
-  expect(response.status).toBe(200);
+  let response = await request.post("/api/products").send(product);
+  expect(response.status).toBe(201);
+
+  response = await request.get("/api/products");
   expect(response.body).toStrictEqual([product]);
 });
 
@@ -40,7 +41,14 @@ it("uppdate product", async () => {
   expect(response.body).toStrictEqual([editedProduct]);
 });
 
-it("delete product", async () => {
+it("delete product success", async () => {
+  const product = { id: "000", name: "Tshirt", price: 1000 };
+  await request.post("/api/products").send(product);
+  const response = await request.delete("/api/products/" + product.id);
+  expect(response.status).toBe(200);
+});
+
+it("delete product fail", async () => {
   const product = { id: "000", name: "Tshirt", price: 1000 };
   await request.post("/api/products").send(product);
   const response = await request.delete("/api/products/" + product.id);

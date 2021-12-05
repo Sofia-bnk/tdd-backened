@@ -12,7 +12,7 @@ module.exports = function (app) {
       login: req.body.login,
     };
     database.addUser(user);
-    res.json();
+    res.status(201).json();
   });
 
   app.get("/api/users/:login", function (req, res) {
